@@ -13,7 +13,7 @@ module.exports = {
      */
     post: function userLogin(req, res, next) {
 
-        userBuilder.login(req, res, function(error, unauth, responseObj){
+        userBuilder.renew(req, res, function(error, unauth, responseObj){
             if(error){
                 if(unauth){
                     res.status(401).send();

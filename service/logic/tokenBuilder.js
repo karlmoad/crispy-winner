@@ -9,13 +9,18 @@ const keys = config.getCertificateConfig();
 
 module.exports = {
 
-    encode: function(userObject, callback){
+    encode: function(obj, callback){
         //TODO switch to RSA256, once App engineering decides method of management
-        jwt.sign(user, keys.private, {algorithm: 'HS512', expiresIn: tokenOpts.ExpiresinSeconds, issuer: tokenOpts.issuer}, callback);
+
+        //Set token expiration time
+        obj['exp'] = Math.floor(Date.now() / 1000) + tokenOpts.expiresInSeconds;
+        //go for it
+        jwt.sign(obj, keys.private, {algorithm: 'HS512', issuer: tokenOpts.issuer}, callback);
+
     },
 
     decode: function(token, callback){
-
+        jwt.verify(token, keys.public, {algorithm: 'HS512', issuer: tokenOpts.issuer}, callback);
     },
 };
 

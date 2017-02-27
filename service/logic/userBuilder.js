@@ -35,7 +35,35 @@ const keys = config.getCertificateConfig();
     },
 
     renew: function(req, res, callback){
+        var token = req.body.access_token;
 
+        if(!token){
+            callback(true, false, null);
+        }
+
+        tokenBuilder.decode(token, function(err, decoded){
+            if(err){
+                callback(true, false, null);
+            }
+            else{
+                //token was decoded correctly get the user and verify with AD still active
+                AD.verifyUserIsActive(decoded.uid, function(error, valid){
+                   if(error){
+                        callback(true, true, null);
+                   }else{
+
+                       tokenBuilder.encode(decoded, function(error, token){
+                           if(error){ callback(true, false, null);}
+                           else {
+                               var responseObject = {user: decoded, token: token};
+                               callback(false, false, responseObject);
+                           }
+
+                       });
+                   }
+                });
+            }
+        });
     }
 
  };

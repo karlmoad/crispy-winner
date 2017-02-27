@@ -29,7 +29,7 @@ const configuration = {
         passReqToCallback: false
     },
     tokenOpts: {
-        ExpiresinSeconds: process.env.TOKEN_EXPIRES_SECONDS,
+        expiresInSeconds: parseInt(process.env.TOKEN_EXPIRES_SECONDS,10),
         issuer: process.env.TOKEN_ISSUER
     }
 };

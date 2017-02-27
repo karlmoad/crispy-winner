@@ -12,6 +12,35 @@ basePath: /api
 schemes:
   - http
 paths:
+  /renew:
+    post:
+      tags:
+        - authentication
+      summary: >-
+        Renew a token
+      operationId: userRenew
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/loginRequest'
+      responses:
+        '200':
+          description: successful
+          schema:
+            $ref: '#/definitions/loginResponse'
+        '401':
+          description: unauthorized
+        '500':
+          description: internal error
+          schema:
+            $ref: '#/definitions/Error'
+
   /login:
     post:
       tags:
@@ -41,6 +70,7 @@ paths:
           description: internal error
           schema:
             $ref: '#/definitions/Error'
+
 definitions:
   Error:
     type: object

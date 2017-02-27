@@ -10,9 +10,6 @@ const OIDCBearerStrategy = require('passport-azure-ad').BearerStrategy;
 
 module.exports = {
     authenticateUser: function(req, res, callback){
-
-        console.log(JSON.stringify(config.getPassportOptions()));
-
         // use passport azure ad to validate the access token provided by the client
         var bearerStrategy = new OIDCBearerStrategy(config.getPassportOptions(),
             function(token, done) {
@@ -39,7 +36,7 @@ module.exports = {
                                 userObj['contexts'] = req.body.contexts;
 
                                 // get the users groups from UPMC local AD
-                                AD.getGroupMembershipForUser(userObj.id, function(err, groups){
+                                AD.getGroupMembershipForUser(user.sAMAccountName, function(err, groups){
                                     if(err){
                                         callback(true,false, null); //SHTF somewhere send error
                                     }else{
@@ -113,5 +110,14 @@ module.exports = {
         });
 
         */
+    },
+    verifyUserIsActive: function(uid, callback){
+        AD.findUser(uid, function(err, user){  //find the user within the UPMC local Active Directory
+            if(err){
+                callback(true,false);  //SHTF somewhere send error
+            }else {
+                callback(false, true);
+            }
+        });
     }
 };
