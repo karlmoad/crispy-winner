@@ -1,0 +1,118 @@
+swagger: '2.0'
+info:
+  description: >
+    This service provides an authentication gateway for UPMC ESB services and
+    applications
+  version: 1.0.0
+  title: 'Enterprise Service Bus, Authentication Service'
+  termsOfService: 'http://isd.upmc.com/esb/terms'
+  contact:
+    name: esbtbd@upmc.edu
+basePath: /api
+schemes:
+  - http
+paths:
+  /login:
+    post:
+      tags:
+        - authentication
+      summary: >-
+        Authenticate a user and acquire group memberships and associated
+        application permission context(s)
+      operationId: userLogin
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/loginRequest'
+      responses:
+        '200':
+          description: successful
+          schema:
+            $ref: '#/definitions/loginResponse'
+        '401':
+          description: unauthorized
+        '500':
+          description: internal error
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  Error:
+    type: object
+    properties:
+      exceptions:
+        type: array
+        items:
+          $ref: '#/definitions/Exception'
+  Exception:
+    type: object
+    properties:
+      code:
+        type: string
+      description:
+        type: string
+  loginRequest:
+    type: object
+    properties:
+      access_token:
+        type: string
+      contexts:
+        type: array
+        items:
+          type: string
+    required:
+      - access_token
+
+  userObject:
+    type: object
+    properties:
+      firstName:
+        type: string
+      lastName:
+        type: string
+      uid:
+        type: string
+      email:
+        type: string
+      exp:
+        type: integer
+        format: int64
+      roles:
+        type: array
+        items:
+          $ref: '#/definitions/userRole'
+
+  userRole:
+    type: object
+    properties:
+      id:
+        type: string
+      permissions:
+        type: array
+        items:
+          $ref: '#/definitions/userPermission'
+
+  userPermission:
+    type: object
+    properties:
+      component:
+        type: array
+        items:
+          type: string
+      allowed:
+        type: array
+        items:
+          type: string
+
+  loginResponse:
+    type: object
+    properties:
+      token:
+        type: string
+      user:
+        $ref: '#/definitions/userObject'
