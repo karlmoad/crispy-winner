@@ -23,6 +23,9 @@ module.exports = {
                             if (!user) {
                                 callback(true, true, null); // OOPs didn't find the user in local AD, problem?
                             }else{
+
+                                console.log(JSON.stringify(user));
+
                                 // flesh out base user object given data currently avail.
                                 var userObj={};
                                 userObj['uid'] = user.sAMAccountName;
@@ -68,49 +71,9 @@ module.exports = {
                 req.login(user, null);  // Make passport manually finalize the login process decoding the full token
             }
         })(req, res, function(){return});
-
-        /*  actual final code keep
-        var userObj ={};
-
-        //find the user
-        AD.findUser(loginRequest.userid, function(err, user){
-            if(err){
-                callback(true,false, null);
-            }else {
-                if (!user) {
-                    callback(true, true, null);
-                }else{
-                    // we have a user get their groups
-
-                    //console.log("Supplied ID: %s", loginRequest.userid);
-                    //console.log("Principle ID: %s", user.userPrincipalName);
-                    //console.log("User Obj: %s", JSON.stringify(user));
-
-                    userObj['id'] = user.sAMAccountName;
-                    userObj['email'] = user.mail;
-                    userObj['groups'] = [];
-                    userObj['contexts'] = loginRequest.contexts;
-
-                    AD.getGroupMembershipForUser(userObj.id, function(err, groups){
-                        if(err){
-                            callback(true,false, null);
-                        }else{
-                            if(groups){
-                                groups.forEach(function(group){
-                                    userObj.groups.push(group.cn.toString());
-                                });
-
-                            }
-                            //console.log(JSON.stringify(userObj));
-                            callback(false, false, userObj);
-                        }
-                    });
-                }
-            }
-        });
-
-        */
     },
+
+
     verifyUserIsActive: function(uid, callback){
         AD.findUser(uid, function(err, user){  //find the user within the UPMC local Active Directory
             if(err){

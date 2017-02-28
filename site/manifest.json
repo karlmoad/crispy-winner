@@ -1,0 +1,7 @@
+{
+  "name": "azure-login",
+  "short_name": "azure-login",
+  "description": " ",
+  "start_url": "/",
+  "display": "standalone"
+}

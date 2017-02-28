@@ -35,7 +35,7 @@ const keys = config.getCertificateConfig();
     },
 
     renew: function(req, res, callback){
-        var token = req.body.access_token;
+        var token = req.body.authorization_token;
 
         if(!token){
             callback(true, false, null);

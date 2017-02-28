@@ -28,12 +28,12 @@ paths:
           name: body
           required: true
           schema:
-            $ref: '#/definitions/loginRequest'
+            $ref: '#/definitions/renewRequest'
       responses:
         '200':
           description: successful
           schema:
-            $ref: '#/definitions/loginResponse'
+            $ref: '#/definitions/serviceResponse'
         '401':
           description: unauthorized
         '500':
@@ -63,7 +63,7 @@ paths:
         '200':
           description: successful
           schema:
-            $ref: '#/definitions/loginResponse'
+            $ref: '#/definitions/serviceResponse'
         '401':
           description: unauthorized
         '500':
@@ -86,6 +86,7 @@ definitions:
         type: string
       description:
         type: string
+
   loginRequest:
     type: object
     properties:
@@ -97,6 +98,14 @@ definitions:
           type: string
     required:
       - access_token
+
+  renewRequest:
+    type: object
+    properties:
+      authorization_token:
+        type: string
+    required:
+      - authorization_token
 
   userObject:
     type: object
@@ -139,7 +148,7 @@ definitions:
         items:
           type: string
 
-  loginResponse:
+  serviceResponse:
     type: object
     properties:
       token:

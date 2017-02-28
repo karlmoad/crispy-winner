@@ -1,0 +1,19 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../azure-login-component/azure-login-component.html">
+
+<dom-module id="azure-login-app">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <azure-login-component tenant="{tenant}" clientid="{clientid}"></azure-login-component>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'azure-login-app'
+    });
+  </script>
+</dom-module>

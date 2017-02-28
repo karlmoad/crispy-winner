@@ -12,6 +12,12 @@ module.exports = {
     encode: function(obj, callback){
         //TODO switch to RSA256, once App engineering decides method of management
 
+        //remove existsing values of token header if present
+        delete obj.iss;
+        delete obj.exp;
+        delete obj.iat;
+        delete obj.alg;
+
         //Set token expiration time
         obj['exp'] = Math.floor(Date.now() / 1000) + tokenOpts.expiresInSeconds;
         //go for it
