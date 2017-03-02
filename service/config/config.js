@@ -14,8 +14,8 @@ var sprintf = require("sprintf-js").sprintf
 const configuration = {
     url: process.env.ADURL,
     dn: process.env.ADDN,
-    user: process.env.UID,
-    password: process.env.PWD,
+    user: process.env.LDUID,
+    password: process.env.LDPWD,
     keys: {
         public: process.env.PUBLIC,
         private: process.env.PRIVATE
@@ -63,4 +63,3 @@ module.exports = {
         return configuration.tokenOpts;
     }
 };
-
