@@ -140,7 +140,7 @@ definitions:
     type: Object
       component:
         type: string
-      permission:
+      permissions:
         type: array
         items:
           type: string
