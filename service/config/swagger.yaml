@@ -129,7 +129,7 @@ definitions:
   userRole:
     type: object
     properties:
-      id:
+      role:
         type: string
       permissions:
         type: array
@@ -137,13 +137,10 @@ definitions:
           $ref: '#/definitions/userPermission'
 
   userPermission:
-    type: object
-    properties:
+    type: Object
       component:
-        type: array
-        items:
-          type: string
-      allowed:
+        type: string
+      permission:
         type: array
         items:
           type: string
