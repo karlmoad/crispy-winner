@@ -3,8 +3,7 @@
 <link rel="import" href="../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../bower_components/paper-menu-button/paper-menu-button.html">
 
-<script type="application/javascript" src="../../bower_components/adal-angular/dist/adal.min.js"></script>
-<script type="application/javascript" src="./upmc-auth.js"></script>
+<script type="application/javascript" src="../../bower_components/azure-auth/lib/auth.js"></script>
 
 <dom-module id="azure-login-component">
     <template>
@@ -54,12 +53,6 @@
                 config: {
                     type: Object,
                 },
-                authenContext:{
-                    type: Object
-                },
-                authorContext:{
-                    type: Object
-                },
                 user: {
                     type: Object,
                     notify: true
@@ -69,6 +62,8 @@
                     notify:true
                 }
             },
+
+            authContext: null,
 
             getConfig: function(){
                 return {
@@ -84,64 +79,41 @@
             },
 
             ready: function() {
-
-                this.authenContext = new AuthenticationContext(this.getConfig());
-                this.authorContext = new AuthorizationContext(this.getConfig());
-
-                var isCallback = this.authenContext.isCallback(window.location.hash);
-                console.log("Callback ?: %s", isCallback);
-                this.authenContext.handleWindowCallback();
-
-                if (isCallback && !this.authenContext.getLoginError()) {
-                    window.location = this.authenContext._getItem(this.authenContext.CONSTANTS.STORAGE.LOGIN_REQUEST);
-                }
-
-                var accessToken = this.authenContext._getItem(this.authenContext.CONSTANTS.STORAGE.IDTOKEN);
-
-                var usr = this.authenContext.getCachedUser();
-                if (usr) {
-                    this.$.divlogin.hidden = true;
-                    this.$.divlogout.hidden = false;
-
-                    this.authorContext.authorize(accessToken, function(error, response){
-                        if(error){
-                            console.log("Error: %s, forcing logout", error);
-                            this.authenContext.logOut();
-                        }
-                        else{
-                            //Load user data
-                            this.user = response.user;
-                            this.token = response.token;
-                            this.displayName = this.user.uid;
-                        }
-                    }.bind(this)); //Make sure the call remains bound to current context
-                }else{
-                    this.$.divlogin.hidden = false;
-                    this.$.divlogout.hidden = true;
-                }
+                this.authContext = new AuthContext(this.getConfig());
+                this.authContext.authorize(this.authCallback.bind(this));
             },
 
             renew: function(){
-                this.authorContext.renew(function(error, response){
-                    if(error){
-                        console.log("Error: %s, forcing logout", error);
-                        this.authenContext.logOut();
-                    }
-                    else{
-                        //Load user data
-                        this.user = response.user;
-                        this.token = response.token;
-                    }
-                }.bind(this)); //Make sure the call remains bound to current context
+                this.authContext(this.authCallback.bind(this));
             },
 
             login: function() {
-                this.authenContext.login();
+                this.authContext.login();
             },
 
             logout: function(){
-                this.authenContext.logOut();
-                this.authorContext.logOut();
+                this.authContext.logout(this.authCallback.bind(this))
+            },
+
+            authCallback: function(error, token){
+                if(error){
+                    console.log("Error: %s", error);
+                }else{
+                    if(token){
+                        this.$.divlogin.hidden = true;
+                        this.$.divlogout.hidden = false;
+
+                        var u = this.authContext.getUser();
+
+                        this.user = u.user;
+                        this.token = u.token;
+                        this.displayName = u.uid;
+
+                    }else{
+                        this.$.divlogin.hidden = false;
+                        this.$.divlogout.hidden = true;
+                    }
+                }
             }
         });
     </script>

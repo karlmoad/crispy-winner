@@ -6,7 +6,8 @@
     "polymer": "Polymer/polymer#^1.4.0",
     "adal-angular": "^1.0.14",
     "paper-item": "PolymerElements/paper-item#^1.2.1",
-    "paper-menu-button": "PolymerElements/paper-menu-button#^1.5.2"
+    "paper-menu-button": "PolymerElements/paper-menu-button#^1.5.2",
+    "azure-auth": "karlmoad/azure-auth"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
